@@ -13,11 +13,16 @@ namespace autoApp.Models
         [Required]
         public string Name { get; set; }
 
-        public Model(string name)
+        public Model(string name, int id)
         {
-            Name = Name;
+            Name = name;
+            ManufacturerId = id;
         }
 
         public ICollection<Car> Cars { get; set; }
+
+        public int? ManufacturerId { get; set; }
+        public Manufacturer Manufacturer { get; set; }
+
     }
 }

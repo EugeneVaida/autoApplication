@@ -12,17 +12,14 @@ namespace autoApp.Models
         public int Id { get; set; }
         public DateTime ManufacturerDate { get; set; }
         public decimal Price { get; set; }
-        public decimal Description { get; set; }
+        public string Description { get; set; }
         public int Power { get; set; }
-        public string FuelConsumption { get; set; }
+        public decimal FuelConsumption { get; set; }
         public string Image { get; set; }
-
-
-
+        public string Color { get; set; }    
+        
         public int? ModelId { get; set; }
         public Model Model { get; set; }
-
-        public int? ManufacturerId { get; set; }
-        public Manufacturer Manufacturer { get; set; }
+        
     }
 }

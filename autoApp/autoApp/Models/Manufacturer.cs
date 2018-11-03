@@ -18,6 +18,6 @@ namespace autoApp.Models
             Name = name;
         }
 
-        public ICollection<Car> Cars { get; set; }
+        public ICollection<Model> Models { get; set; }
     }
 }
