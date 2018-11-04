@@ -154,10 +154,12 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\Car.cs" />
+    <Compile Include="Models\Converter\Converter.cs" />
     <Compile Include="Models\DB\CarContext.cs" />
     <Compile Include="Models\DB\CarDbInitializer.cs" />
     <Compile Include="Models\Manufacturer.cs" />
     <Compile Include="Models\Model.cs" />
+    <Compile Include="Models\ModelItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -183,6 +185,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\site.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>

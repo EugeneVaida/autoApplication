@@ -6,9 +6,65 @@
 
 <h2>Index</h2>
 
+<div class="container">
+    <div class="row">
+        <div class="col-md-3 left">
+            <div class="form-group">
+                @Html.Label("Manufacturer")
+                <div class="col-sm-12">
+                    @Html.DropDownList("ManufacturerId", null, htmlAttributes: new { @class = "form-control", onchange = "manufacturerChanged(this.value)" })
+                </div>               
+            </div>
+        </div>
+        <div class="col-md-3 left">
+            <div class="form-group">
+                @Html.Label("Model")
+                @if (ViewBag.Model != null)
+                {                    
+                    <input type="checkbox" data-toggle="tooltip" data-placement="top" title="Check to enable models" onchange="enableModels(this.checked)" checked>
+                    <div class="col-sm-12">                    
+                        @Html.DropDownList("ModelId", null, htmlAttributes: new { @class = "form-control" })
+                    </div>                    
+                }
+                else
+                {
+                    <input type="checkbox" data-toggle="tooltip" data-placement="top" title="Check to enable models" onchange="enableModels(this.checked)">
+                    <div class="col-sm-12">
+                        @Html.DropDownList("ModelId", null, htmlAttributes: new { @class = "form-control", @disabled = "disabled" })
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-sm-2">
+            @Html.Label("Search")
+            <div class="col-sm-12">
+                <div class="btn-group" role="group" >
+                    <button type="button" class="btn btn-default" onclick="search('@ViewBag.Price')">Search</button>
+                </div>
+            </div>            
+        </div>
+        <div class="col-sm-2">
+            @Html.Label("Price")
+            <div class="col-sm-12">
+                <div class="btn-group" role="group">
+                    <button type="button" class="btn btn-default">
+                        @Html.ActionLink("Low", "Index", new { price = "Low", manufacturer = ViewBag.Manufacturer, Model = ViewBag.Model })
+                    </button>
+
+                    <button type="button" class="btn btn-default">
+                        @Html.ActionLink("High", "Index", new { price = "High", manufacturer = ViewBag.Manufacturer, Model = ViewBag.Model })
+                    </button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
 <table class="table">
     <tr>
         <th>
@@ -79,3 +135,77 @@
 }
 
 </table>
+
+@section scripts{
+    <script>
+
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        })
+
+        function search(price) {
+
+            var manufacturer = getManufacturer();
+            var model = getModel();
+            console.log(manufacturer + ' ' + model + ' ');
+            var url = '@Url.Action("Index", "Cars")?price=High'   + '&manufacturer=' + manufacturer + '&model=' + model;
+            window.location.href = url;
+
+        }
+
+        function getModel() {
+            var value
+            if ($("#ModelId")[0].disabled) {
+                value = null;
+            } else {
+                value = $("#ModelId")[0].value;
+            }          
+            
+            return value;
+        }
+
+        function getManufacturer() {
+            var value = $("#ManufacturerId")[0].value;
+            return value;
+        }
+
+        function manufacturerChanged(val) {
+
+            var models = $("#ModelId");
+
+            $.ajax({
+                url: '@Url.Action("GetModelsByManufacturerId")',
+                data: {
+                    id: val
+                },
+                cache: false,
+                success: function (result) {
+                    models.empty();
+                    $.each(result,
+                        function (index, item) {
+                            models.append($('<option value="' + item.Id + '">' + item.Name + '</option>'));
+                        }
+                    )
+                    models.selectpicker('refresh');
+                },
+                error: function (error) {
+                    console.log(error)
+                }
+            });
+
+        }
+
+
+
+        function enableModels(val) {
+
+            if (val == true) {
+                $("#ModelId")[0].disabled = false;
+            } else {
+                $("#ModelId")[0].disabled = true;
+            }
+        }
+    </script>
+
+
+}

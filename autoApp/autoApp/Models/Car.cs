@@ -10,6 +10,8 @@ namespace autoApp.Models
     {
         [Key]
         public int Id { get; set; }
+        [DataType(DataType.Date)]
+        [DisplayFormat(DataFormatString = "{0:yyyy'-'MM'-'dd}", ApplyFormatInEditMode = true)]
         public DateTime ManufacturerDate { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
