@@ -15,10 +15,14 @@ namespace autoApp.Controllers
     {
         private CarContext db = new CarContext();
 
+
+
         // GET: Cars
         public ActionResult Index()
         {
-            var cars = db.Cars.Include(c => c.Model);
+            var cars = db.Cars.Include(c => c.Model).Include(c => c.Model.Manufacturer);
+            ViewBag.ManufacturerId = new SelectList(db.Manufacturers, "Id", "Name");
+            ViewBag.ModelId = new SelectList(db.Models, "Id", "Name");
             return View(cars.ToList());
         }
 
@@ -40,16 +44,17 @@ namespace autoApp.Controllers
         // GET: Cars/Create
         public ActionResult Create()
         {
+            ViewBag.ManufacturerId = new SelectList(db.Manufacturers, "Id", "Name");
             ViewBag.ModelId = new SelectList(db.Models, "Id", "Name");
             return View();
         }
 
         // POST: Cars/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
+        // сведения см. в статье https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,ManufacturerDate,Price,Description,Power,FuelConsumption,Image,Color,ModelId")] Car car)
+        public ActionResult Create([Bind(Include = "Id,ManufacturerDate,Price,Description,Power,FuelConsumption,Image,Color,ModelId,ManufacturerId")] Car car)
         {
             if (ModelState.IsValid)
             {
@@ -58,6 +63,7 @@ namespace autoApp.Controllers
                 return RedirectToAction("Index");
             }
 
+            ViewBag.ManufacturerId = new SelectList(db.Manufacturers, "Id", "Name", car.Model.ManufacturerId);
             ViewBag.ModelId = new SelectList(db.Models, "Id", "Name", car.ModelId);
             return View(car);
         }
@@ -74,16 +80,17 @@ namespace autoApp.Controllers
             {
                 return HttpNotFound();
             }
+            ViewBag.ManufacturerId = new SelectList(db.Manufacturers, "Id", "Name", car.Model.ManufacturerId);
             ViewBag.ModelId = new SelectList(db.Models, "Id", "Name", car.ModelId);
             return View(car);
         }
 
         // POST: Cars/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
+        // Чтобы защититься от атак чрезмерной передачи данных, включите определенные свойства, для которых следует установить привязку. Дополнительные 
+        // сведения см. в статье https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,ManufacturerDate,Price,Description,Power,FuelConsumption,Image,Color,ModelId")] Car car)
+        public ActionResult Edit([Bind(Include = "Id,ManufacturerDate,Price,Description,Power,FuelConsumption,Image,Color,ModelId,ManufacturerId")] Car car)
         {
             if (ModelState.IsValid)
             {
@@ -91,6 +98,7 @@ namespace autoApp.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.ManufacturerId = new SelectList(db.Manufacturers, "Id", "Name", car.Model.ManufacturerId);
             ViewBag.ModelId = new SelectList(db.Models, "Id", "Name", car.ModelId);
             return View(car);
         }

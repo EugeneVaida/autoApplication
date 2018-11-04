@@ -8,6 +8,8 @@ namespace autoApp.Models
 {
     public class Manufacturer
     {
+        public Manufacturer() { }
+
         [Key]
         public int Id { get; set; }
         [Required]
@@ -18,6 +20,6 @@ namespace autoApp.Models
             Name = name;
         }
 
-        public ICollection<Model> Models { get; set; }
+        public virtual ICollection<Model> Models { get; set; }
     }
 }

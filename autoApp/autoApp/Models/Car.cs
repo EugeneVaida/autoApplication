@@ -19,7 +19,7 @@ namespace autoApp.Models
         public string Color { get; set; }    
         
         public int? ModelId { get; set; }
-        public Model Model { get; set; }
-        
+        public virtual Model Model { get; set; }
+
     }
 }

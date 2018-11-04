@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Data.Entity;
+using System.Data.Entity.ModelConfiguration.Conventions;
 
 namespace autoApp.Models.DB
 {
@@ -18,6 +19,7 @@ namespace autoApp.Models.DB
         public DbSet<Car> Cars { get; set; }
         public DbSet<Model> Models { get; set; }
         public DbSet<Manufacturer> Manufacturers { get; set; }
+        
 
     }
 }
