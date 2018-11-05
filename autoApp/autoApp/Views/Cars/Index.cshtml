@@ -1,7 +1,7 @@
 ﻿@model IEnumerable<autoApp.Models.Car>
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Car List";
 }
 
 <h2>Index</h2>
@@ -40,6 +40,7 @@
             <div class="col-sm-12">
                 <div class="btn-group" role="group" >
                     <button type="button" class="btn btn-default" onclick="search('@ViewBag.Price')">Search</button>
+                    <button type="button" class="btn btn-default" onclick="defaultValue()">Default</button>
                 </div>
             </div>            
         </div>
@@ -61,11 +62,11 @@
     </div>
 </div>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
+<p>    
+    <a href="@Url.Action("Create", "Cars")" class="btn btn-info btn-lg">Create</a>    
 </p>
 
-<table class="table">
+@*<table class="table">
     <tr>
         <th>
             @Html.DisplayNameFor(model => model.Model.Manufacturer.Name)
@@ -134,7 +135,31 @@
     </tr>
 }
 
-</table>
+</table>*@
+
+<div class="container">
+    <div class="row">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-4">
+                <div class="thumbnail">
+                    <img src="@Html.DisplayFor(modelItem => item.Image)">
+                    <div class="caption">
+                        <h3>@Html.DisplayFor(modelItem => item.Model.Manufacturer.Name)</h3>
+                        <h5>@Html.DisplayFor(modelItem => item.Model.Name)</h5>                        
+                        <p>@Html.DisplayFor(modelItem => item.Description)</p>
+                        <span>@Html.DisplayFor(modelItem => item.Price)$</span>
+                        <p>
+                            <a href="@Url.Action("Edit", "Cars", new { id = item.Id })" class="btn btn-info">Edit</a>
+                            <a href="@Url.Action("Details", "Cars", new { id = item.Id })" class="btn btn-secondary" role="button">Details</a>
+                            <a href="@Url.Action("Delete", "Cars", new { id = item.Id })" class="btn btn-danger" role="button">Delete</a>
+                        </p> 
+                    </div>
+                </div>
+            </div> 
+        } 
+    </div>       
+</div>
 
 @section scripts{
     <script>
@@ -150,7 +175,11 @@
             console.log(manufacturer + ' ' + model + ' ');
             var url = '@Url.Action("Index", "Cars")?price=High'   + '&manufacturer=' + manufacturer + '&model=' + model;
             window.location.href = url;
+        }
 
+        function defaultValue() {            
+            var url = '@Url.Action("Index", "Cars")';
+            window.location.href = url;
         }
 
         function getModel() {
@@ -159,8 +188,8 @@
                 value = null;
             } else {
                 value = $("#ModelId")[0].value;
-            }          
-            
+            }
+
             return value;
         }
 

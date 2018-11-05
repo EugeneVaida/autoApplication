@@ -26,3 +26,13 @@ textarea {
 label {
     padding-left: 15px;
 }
+
+.thumbnail > img {
+    margin-right: auto;
+    margin-left: auto;
+    max-height: 150px;
+}
+
+.row > div {
+    padding: 5px;
+}
