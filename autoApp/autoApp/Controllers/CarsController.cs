@@ -9,14 +9,16 @@ using System.Web.Mvc;
 using autoApp.Models;
 using autoApp.Models.DB;
 using autoApp.Models.Converter;
+using System.Text.RegularExpressions;
+using System.IO;
+using System.Web.Hosting;
+using System.Configuration;
 
 namespace autoApp.Controllers
 {
     public class CarsController : Controller
     {
         private CarContext db = new CarContext();
-
-
 
         // GET: Cars
         public ActionResult Index(string price, int? manufacturer, int? model)
@@ -88,6 +90,10 @@ namespace autoApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (Request.Files.Count != 0)
+                {
+                    car.Image = CreateImageLink(Request.Files[0]);
+                }
                 db.Cars.Add(car);
                 db.SaveChanges();
                 return RedirectToAction("Index");
@@ -122,7 +128,14 @@ namespace autoApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                db.Entry(car).State = EntityState.Modified;
+                Car oldCar = db.Cars.Find(car.Id);
+                if (Request.Files.Count != 0)
+                {
+                   car.Image = CreateImageLink(Request.Files[0]);
+                }
+                oldCar = ToNewCar(oldCar, car);
+                //db.Entry(car).State = EntityState.Modified;
+                
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -152,6 +165,7 @@ namespace autoApp.Controllers
         public ActionResult DeleteConfirmed(int id)
         {
             Car car = db.Cars.Find(id);
+            DeleteImage(car);
             db.Cars.Remove(car);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -168,6 +182,26 @@ namespace autoApp.Controllers
 
 
         #region HelperMethods
+
+        private string CreateImageLink(HttpPostedFileBase file)
+        {
+            Random rnd = new Random();
+            if (file != null && file.ContentLength > 0)
+            {
+                string fileNameHash = Math.Abs(file.FileName.GetHashCode() * Math.Pow(2, rnd.Next(1, 10))) + Path.GetExtension(file.FileName);
+                var serverUrl = "~/files/img/" + fileNameHash;
+                Regex regex = new Regex(@"^.*\.(jpg|gif|png|bmp|jpeg)$", RegexOptions.IgnoreCase);
+                if (!regex.IsMatch(Path.GetExtension(serverUrl)))
+                {
+                    return null;
+                }
+                file.SaveAs(HostingEnvironment.MapPath(serverUrl));
+                
+                return ConfigurationManager.AppSettings["Url"] + VirtualPathUtility.ToAbsolute(serverUrl);
+            }
+            return null;
+        }
+
         [HttpGet]
         public ActionResult GetModelsByManufacturerId(int id)
         {
@@ -198,6 +232,35 @@ namespace autoApp.Controllers
             };
 
             return modelItem;
+        }
+
+        public Car ToNewCar(Car oldCar, Car editCar)
+        {
+            oldCar.Id = editCar.Id;
+            oldCar.FuelConsumption = editCar.FuelConsumption;
+            oldCar.Description = editCar.Description;
+            oldCar.ManufacturerDate = editCar.ManufacturerDate;
+            oldCar.Power = editCar.Power;
+            oldCar.Price = editCar.Price;
+            oldCar.Color = editCar.Color;
+            oldCar.Model = editCar.Model;
+            oldCar.ModelId = editCar.ModelId;
+
+            if (!string.Equals(oldCar.Image, editCar.Image) && editCar.Image != null)
+            {
+                DeleteImage(oldCar);
+                oldCar.Image = editCar.Image;
+            }
+            return oldCar;
+        }
+
+        public void DeleteImage(Car oldCar)
+        {
+            if (oldCar.Image != null && !string.IsNullOrWhiteSpace(oldCar.Image))
+            {
+                var path = "~/files/img/" + Path.GetFileName(oldCar.Image);
+                System.IO.File.Delete(HostingEnvironment.MapPath(path));
+            }
         }
 
         #endregion
