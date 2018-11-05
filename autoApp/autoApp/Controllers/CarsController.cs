@@ -18,7 +18,7 @@ namespace autoApp.Controllers
 {
     public class CarsController : Controller
     {
-        private CarContext db = new CarContext();
+        CarContext db = new CarContext();
 
         #region Create
         public ActionResult Create()
@@ -42,6 +42,8 @@ namespace autoApp.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+            ViewBag.ManufacturerId = new SelectList(db.Manufacturers, "Id", "Name");
+            ViewBag.ModelId = new SelectList(db.Models, "Id", "Name");
             return View(car);            
         }
         #endregion
@@ -128,13 +130,14 @@ namespace autoApp.Controllers
                     {
                         car.Image = CreateImageLink(Request.Files[0]);
                     }
-                    oldCar = ToNewCar(oldCar, car);
-                    //db.Entry(car).State = EntityState.Modified;
+                    oldCar = ToNewCar(oldCar, car);                    
 
                     db.SaveChanges();
                     return RedirectToAction("Index");
                 }
+
                 car = db.Cars.Find(car.Id);
+
                 ViewBag.ManufacturerId = new SelectList(db.Manufacturers, "Id", "Name", car.Model.ManufacturerId);
                 ViewBag.ModelId = new SelectList(db.Models, "Id", "Name", car.ModelId);
                 return View(car); 

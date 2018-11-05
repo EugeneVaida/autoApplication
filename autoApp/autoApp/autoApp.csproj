@@ -183,10 +183,8 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
-    <Content Include="Scripts\Pages\Edit\edit.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\Pages\Index\index.js" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -212,6 +210,8 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="files\img\" />
+    <Folder Include="Scripts\Pages\Edit\" />
+    <Folder Include="Scripts\Pages\Index\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

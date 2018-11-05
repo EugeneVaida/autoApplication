@@ -15,7 +15,7 @@ namespace autoApp.Models
         [DisplayFormat(DataFormatString = "{0:yyyy'-'MM'-'dd}", ApplyFormatInEditMode = true)]
         public DateTime ManufacturerDate { get; set; }
         [Required]
-        [Range(100, 1000000, ErrorMessage = "Power must be between 20 and 2000")]
+        [Range(100, 1000000, ErrorMessage = "Power must be between 100 and 1000000")]
         public decimal Price { get; set; }
         public string Description { get; set; }
         [Required]

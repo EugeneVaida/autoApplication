@@ -60,6 +60,7 @@
                 <label class="btn btn-default btn-file">
                     Browse Image <input name="image" type="file" accept="image/*">
                 </label>
+                @Html.ValidationMessageFor(model => model.Image, "", new { @class = "text-danger" })
             </div>
         </div>
 
