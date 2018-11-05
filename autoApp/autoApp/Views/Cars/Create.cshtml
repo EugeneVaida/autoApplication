@@ -82,7 +82,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Model.ManufacturerId, "ManufacturerId", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("ManufacturerId", null, htmlAttributes: new { @class = "form-control" })
+                @Html.DropDownList("ManufacturerId", null, htmlAttributes: new { @class = "form-control", onchange = "manufacturerChanged(this.value)" })
                 @Html.ValidationMessageFor(model => model.Model.ManufacturerId, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -98,3 +98,38 @@
 <div>
     @Html.ActionLink("Back to List", "Index")
 </div>
+
+
+@section scripts{
+    <script>
+
+    function manufacturerChanged(val) {
+
+        var models = $("#ModelId");
+
+        $.ajax({
+            url: '@Url.Action("GetModelsByManufacturerId")',
+            data: {
+                id: val
+            },
+            cache: false,
+            success: function (result) {
+                models.empty();
+                $.each(result,
+                    function (index, item) {
+                        models.append($('<option value="' + item.Id + '">' + item.Name + '</option>'));
+                    }
+                )
+                models.selectpicker('refresh');
+            },
+            error: function (error) {
+                console.log(error)
+            }
+        });
+    }
+
+
+    </script>
+
+
+}
